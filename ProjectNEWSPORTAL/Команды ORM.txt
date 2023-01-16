@@ -1,0 +1,70 @@
+>>> from news.models import *                   
+(1)
+>>> User1 = User.objects.create_user('Alex')   
+>>> User2 = User.objects.create_user('Tom')   
+
+>>> 
+(2)
+>>> Author1 = Author.objects.create(user_id=1)
+>>> Author2 = Author.objects.create(user_id=2) 
+
+>>> 
+(3)
+>>> Category1 = Category.objects.create(category_name='Sports')
+>>> Category2 = Category.objects.create(category_name='Games')  
+>>> Category3 = Category.objects.create(category_name='Books') 
+>>> Category3 = Category.objects.create(category_name='Science')   #ТУт ОШИБСЯ назвал также Category3 - как это исправить?
+>>> Category5 = Category.objects.create(category_name='Travels')   #решил так пока исправить сделал еще одну категорию!
+
+
+>>> 
+(4)
+>>> News1 = Post.objects.create(author_id=1, post_type='news')
+>>> Blog1 = Post.objects.create(author_id=1)                   
+>>> Blog2 = Post.objects.create(author_id=1) 
+
+>>> 
+(5) 
+>>> News1.category.set([Category1, Category2])
+>>> Blog1.category.set([Category3])            
+>>> Blog2.category.set([Category5])
+
+(6)
+>>> comment1 = Comment.objects.create(post_id=1, user_id=1, comment_text='Good news, thanks!')    
+>>> comment2 = Comment.objects.create(post_id=2, user_id=2, comment_text='Good news, thanks!')    
+>>> comment3 = Comment.objects.create(post_id=3, user_id=1, comment_text='Good news, thanks!')  
+>>> comment4 = Comment.objects.create(post_id=3, user_id=2, comment_text='Good news, thanks!') 
+
+>>> 
+(7)
+>>> Post.like(Post.objects.get(id=1))
+>>> Comment.like(Comment.objects.get(id=3))
+>>> Post.like(Post.objects.get(id=2))
+>>> Comment.like(Comment.objects.get(id=3))
+>>> Comment.like(Comment.objects.get(id=2))
+>>> Comment.like(Comment.objects.get(id=4)) 
+>>> Post.like(Post.objects.get(id=3))
+>>> Post.dislike(Post.objects.get(id=1))
+>>> Comment.dislike(Comment.objects.get(id=2))
+>>> 
+(8)
+>>> Author.update_rating(Author.objects.get(id=1))
+>>> Author.update_rating(Author.objects.get(id=2)) 
+(9)
+>>> Author.objects.all().order_by('-rating').values('user__username', 'rating')[0]
+{'user__username': 'Alex', 'rating': 11}
+(10)
+>>> Post.objects.all().order_by('-rating').values('time_created', 'author', 'author_id', 'id', 'rating', 'object_title')
+<QuerySet [{'time_created': datetime.datetime(2023, 1, 13, 11, 36, 10, 940936, tzinfo=datetime.timezone.utc), 'author': 1, 'author_id': 1, 'id': 2, 'rating': 1, 'object_title': 'no tit
+le'}, {'time_created': datetime.datetime(2023, 1, 13, 11, 36, 17, 746773, tzinfo=datetime.timezone.utc), 'author': 1, 'author_id': 1, 'id': 3, 'rating': 1, 'object_title': 'no title'},
+ {'time_created': datetime.datetime(2023, 1, 13, 11, 35, 27, 740514, tzinfo=datetime.timezone.utc), 'author': 1, 'author_id': 1, 'id': 1, 'rating': 0, 'object_title': 'no title'}]> 
+(11)
+>>> Comment.objects.filter(id=1).values('comment_text', 'id', 'time_created', 'user')
+<QuerySet [{'comment_text': 'Good news, thanks!', 'id': 1, 'time_created': datetime.datetime(2023, 1, 13, 11, 46, 39, 259279, tzinfo=datetime.timezone.utc), 'user': 1}]>
+
+
+
+Post.objects.create(author_id=1,
+                    post_type='News',
+                    object_title='Researchers at Tokyo Metropolitan University have found',
+                    object_content='Researchers at Tokyo Metropolitan University have found that PDGF-B helps repair muscle, and promotes muscle growth and strength by stimulating the division of muscle stem cells. The study is published in the journal Biochemical and Biophysical Research Communications.')
