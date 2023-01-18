@@ -1,0 +1,28 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block content %}
+<h1>Удаление новости/статьи</h1>
+<form action="" method="post">
+    {% csrf_token %}
+   <hr>
+   <table>
+        <tr>
+            <td>Тип</td>
+            <td>Заголовок</td>
+            <td>Текст</td>
+            <td>Дата загрузки</td>
+        </tr>
+        <tr>
+            <td>{{ object.type_of_post }}</td>
+            <td>{{ object.title|censor }}</td>
+            <td>{{ object.text|censor }}</td>
+            <td>{{ object.time_in|date:'d.M.Y'  }}</td>
+        </tr>
+   </table>
+    <hr>
+    <p>Удаляем "{{ object.title }}"?</p>
+    <input type="submit" value="Delete" />
+</form>
+{% endblock content %}
