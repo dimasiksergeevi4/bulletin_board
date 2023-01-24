@@ -4,29 +4,25 @@ from django.core.exceptions import ValidationError
 
 
 class PostForm(forms.ModelForm):
+    text = forms.CharField(min_length=20)
+
     class Meta:
         model = Post
         fields = [
-                 'object_title',
-                 'object_content',
-                 'author',
-                 'post_type',
-                 'category',
-                  ]
+            'id_authors',
+            'title',
+            'text',
+            'post_category',
+        ]
 
     def clean(self):
         cleaned_data = super().clean()
-        object_content = cleaned_data.get("object_content")
-        object_title = cleaned_data.get("object_title")
+        title = cleaned_data.get("title")
+        text = cleaned_data.get("text")
 
-        if object_content is not None and len(object_content) < 20:
-            raise ValidationError({
-                "object_content": "Content"
-            })
-
-        if object_title == object_content:
+        if text == title:
             raise ValidationError(
-                "Content must not be same as Title"
+                "Текст не должен быть идентичен заголовку."
             )
 
         return cleaned_data

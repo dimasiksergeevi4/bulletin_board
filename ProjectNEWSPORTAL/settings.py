@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+
 import os
 from pathlib import Path
+from news.resources import HOST_USER, HOST_PASSWORD
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,17 +40,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.flatpages',
+
     'django.contrib.sites',
-    'news',
+    'django.contrib.flatpages',
     'fpages',
-    'profanity',
+
+    'news.apps.NewsConfig',
     'django_filters',
-    'protect',
+    'accounts',
+
     'sign',
+    'protect',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    # ... include the providers you want to enable:
     'allauth.socialaccount.providers.google',
 ]
 
@@ -61,8 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'ProjectNEWSPORTAL.urls'
@@ -71,6 +79,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        # 'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,10 +87,30 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #'django.template.context_processors.request',
             ],
         },
     },
 ]
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+#ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+
+#LOGIN_URL = 'sign/login/'
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
 
 WSGI_APPLICATION = 'ProjectNEWSPORTAL.wsgi.application'
 
@@ -142,33 +171,15 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
-LOGIN_URL = '/sign/login/'
-LOGIN_REDIRECT_URL = '/'
+# настройка отправления сообщений
+SITE_URL = 'http://127.0.0.1:8000'
+EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
+EMAIL_HOST_USER = 'Sender2023'  # ваше имя пользователя - это всё то что идёт до собаки
+EMAIL_HOST_PASSWORD = 'U9w-AUf-Xa5-nU'  # пароль от почты
+DEFAULT_FROM_EMAIL = 'Sender2023@yandex.ru'
+EMAIL_USE_SSL = True  # Яндекс использует ssl, включать его здесь обязательно
 
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
-        'APP': {
-            'client_id': '',
-            'secret': '',
-            'key': ''
-        }
-    }
-}
-
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
