@@ -1,0 +1,73 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% load custom_tags %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+
+    {% if is_not_subscribers %}
+        {# <button> <a href="{% url 'subscribe' category.id %}">Подписаться</a> </button> #}
+        <p class="text-center"><a href="/news" class="btn btn-secondary btn-sn">Подписаться</a></p>
+    {% endif %}
+
+    <hr>
+    <h2>Статьи и новости отдельных категорий</h2>
+   {% if posts %}
+       <table>
+           <tr>
+               <td>Категория</td>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Предпросмотр</td>
+           </tr>
+
+           {% for post in categories_new_list %}
+           <tr>
+               {% for category in categories_list.category.all %}
+                    <td><a href="/news/categories/{{post.post_category.pk}}">{{ category }}</a></td>
+               {% endfor %}
+               <td>{{ post.title|truncatechars:10|censor }}</td>
+               <td>{{ post.time_in|date:'d.M.Y'  }}</td>
+                <!-- Добавим специальный фильтр truncatechars,
+                чтобы ограничить количество символов до 20.
+                Все остальные символы превратятся в многоточие. -->
+               <td><a href="/news/{{post.pk}}">{{ post.text|truncatechars:20|censor }}</a></td>
+               {# <td>{{ post.text|truncatechars:20|censor }}</td> #}
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h3>Публикаций нет!</h3>
+   {% endif %}
+
+
+{# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}

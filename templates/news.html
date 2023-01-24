@@ -1,57 +1,64 @@
 {% extends 'flatpages/default.html' %}
-{% load custom_tags %}
+
 {% load custom_filters %}
+
+{% load custom_tags %}
+
 {% block title %}
 Post
 {% endblock title %}
 
 {% block content %}
-   <h1>All News</h1>
-   <form action="" method="get">
-       {{ filterset.form.as_p }}
-       <input type="submit" value="Find" />
-   </form>
 
     <hr>
-    {% if news %}
-        <table>
-            <tr>
-               <td>Title</td>
-               <td>Time Created</td>
-               <td>Content</td>
-               <td>Post type</td>
+    <h2>Все статьи и новости</h2>
+   {% if posts %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Предпросмотр</td>
            </tr>
 
-           {% for post in news %}
+           {% for post in posts %}
            <tr>
-               <td>{{ post.object_title }}</td>
-               <td>{{ post.time_created }}</td>
-               <td>{{ post.object_content|truncatewords:20 }}</td>
-               <td>{{ post.post_type }}</td>
-               <td>{{ post.post_category }}</td>
+               <td>{{ post.title|truncatechars:10|censor }}</td>
+               <td>{{ post.time_in|date:'d.M.Y'  }}</td>
+                <!-- Добавим специальный фильтр truncatechars,
+                чтобы ограничить количество символов до 20.
+                Все остальные символы превратятся в многоточие. -->
+               <td><a href="/news/{{post.pk}}">{{ post.text|truncatechars:20|censor }}</a></td>
+               {# <td>{{ post.text|truncatechars:20|censor }}</td> #}
            </tr>
            {% endfor %}
 
        </table>
-    {% else %}
-       <h2>No News!</h2>
-    {% endif %}
+   {% else %}
+       <h3>Публикаций нет!</h3>
+   {% endif %}
 
-    {% if page_obj.has_previous %}
-       <a href="?{% url_replace page=1 %}">1</a>
+
+{# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
        {% if page_obj.previous_page_number != 1 %}
            ...
-           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
        {% endif %}
    {% endif %}
 
+   {# Информация о текущей странице #}
    {{ page_obj.number }}
 
+   {# Информация о следующих страницах #}
    {% if page_obj.has_next %}
-       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
        {% if paginator.num_pages != page_obj.next_page_number %}
            ...
-           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
        {% endif %}
    {% endif %}
+
 {% endblock content %}

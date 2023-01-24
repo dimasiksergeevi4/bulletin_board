@@ -14,14 +14,28 @@ Post
    <hr>
    <table>
         <tr>
+            <td>Категория</td>
+            <td>I  I</td>
+            <td>Автор</td>
+            <td>I  I</td>
             <td>Заголовок</td>
+            <td>I  I</td>
             <td>Текст</td>
+            <td>I  I</td>
             <td>Дата загрузки</td>
         </tr>
         <tr>
+            <td><a href="/news/categories/{{post.post_category.pk}}">{{ category }}</a></td>
+            <td>I  I</td>
+            <td>{{ new.id_authors }}</td>
+            <td>I  I</td>
             <td>{{ new.title|censor }}</td>
+            <td>I  I</td>
             <td>{{ new.text|censor }}</td>
+            <td>I  I</td>
             <td>{{ new.time_in|date:'d.M.Y'  }}</td>
         </tr>
    </table>
+<hr>
+<button> <a href="/news"> Вернуться к списку статей</a> </button>
 {% endblock content %}
