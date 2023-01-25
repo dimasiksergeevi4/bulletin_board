@@ -168,7 +168,7 @@ class AppointmentView(View):
             subject=f'{appointment.user_name} {appointment.date.strftime("%Y-%M-%d")}',
             # имя пользователя и дата будут в теме для удобства
             message=appointment.message,  # сообщение с кратким описанием
-            from_email='johnnydeppPDEV16@yandex.ru',  # здесь указываете почту, с которой будете отправлять
+            from_email='Sender2023@yandex.ru',  # здесь указываете почту, с которой будете отправлять
             recipient_list=[]  # здесь список получателей.
         )
 
