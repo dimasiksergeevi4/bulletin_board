@@ -2,7 +2,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.template.loader import render_to_string
-
+#from ProjectNEWSPORTAL import settings
+from django.conf import settings
 from .models import PostCategory, Category, Post
 
 #from project.settings import SITE_URL, DEFAULT_FROM_EMAIL
@@ -31,11 +32,11 @@ def send_notification(preview, pk, title, subscribers):
 @receiver(m2m_changed, sender=PostCategory)
 def notify_about_new_post(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
-        categories = instance.category.all()
+        categories = instance.post_category.all()
         subcribers: list[str] = []
         for category in categories:
             subcribers += category.subscribers.all()
 
-        subcribers = [s.mail for s in subcribers]
+        subcribers = [s.email for s in subcribers]
 
         send_notification(instance.preview(), instance.pk, instance.title, subcribers)
