@@ -3,9 +3,9 @@ from celery import Celery
 from celery.schedules import crontab
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'news.settings')
-app = Celery('news')
-app.config_from_object('django.conf:settings', name='CELERY')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ProjectNEWSPORTAL.settings')
+app = Celery('ProjectNEWSPORTAL')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 
