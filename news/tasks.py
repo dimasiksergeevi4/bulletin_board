@@ -14,7 +14,7 @@ def last_post_week():
     today = datetime.datetime.now()
     last_week = today - datetime.timedelta(days=7)
     posts = Post.objects.filter(time_in__gte=last_week)
-    categories = set(posts.value_list('category__name', flat=True))
+    categories = set(posts.values_list('category__name', flat=True))
     subscribers = Category.objects.filter(name_catagory__in=categories).values_list('subscribers__email', flat=True)
     html_content = render_to_string(
         'daily_post.html',
