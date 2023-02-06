@@ -267,7 +267,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'NewsPortal.views': {
+        'news.views': {
             'handlers': ['console_debug', 'console_warning', 'console_error'],
             'level': 'DEBUG',
             'propagate': True,
