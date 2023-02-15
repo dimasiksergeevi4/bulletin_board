@@ -1,0 +1,98 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+Объявления
+{% endblock title %}
+
+{% block content %}
+
+<h1>Список объявлений на: {% current_time %} </h1>
+   <hr>
+
+   {% if post_list %}
+    <div class="container">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Автор</th>
+              <th scope="col">Создано</th>
+              <th scope="col">Категория</th>
+                <th scope="col">Название</th>
+                <th scope="col">Текст</th>
+                <th scope="col">Варианты действий</th>
+            </tr>
+          </thead>
+  <tbody>
+
+
+           {% for one in post_list %}
+            <tr class="light">
+                <td>{{ one.author }}</td>
+               <td>{{ one.date_of_creation }}</td>
+                <td>{{ one.category }}</td>
+               <td><a href="/post/{{ one.id }}/">{{ one.title|censor }}</a></td>
+               <td>{{ one.content| safe }}</td>
+                {% if one.to_comment %}
+                    <td><button> <a href="/post/{{ one.id }}/create/">Создать объявление</a> </button></td>
+                {% endif %}
+                {% if one.to_edit %}
+                    <td><button> <a href="/post/{{ one.id }}/edit/">Изменить объявление</a> </button></td>
+                {% endif %}
+                {% if one.to_edit %}
+                    <td><button> <a href="/post/{{ one.id }}/delete/">Удалить объявление</a> </button></td>
+                {% endif %}
+                <tr class="light">
+                    <td>{{ one.last_comment }} {{ one.last_comment_author }}</td>
+                </tr>
+           </tr>
+           {% endfor %}
+         </tbody>
+       </table>
+    </div>
+   {% else %}
+       <h2>Объявлений пока нет.</h2>
+   {% endif %}
+
+
+  <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?{% url_replace page=1 %}">1</a>
+        </li>
+            {% if page_obj.previous_page_number != 1 %}
+      <li class="page-item">
+                <a class="page-link disabled"> ... </a>
+      </li>
+                <li class="page-item">
+                <a class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+                </li>
+            {% endif %}
+        {% endif %}
+
+         {# Информация о текущей странице #}
+    {% if page_obj.paginator.num_pages > 1 %}
+      <li class="page-item">
+        <a class="page-link active"> {{ page_obj.number }} </a>
+      </li>
+    {% endif %}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+             <li class="page-item">
+       <a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+                 </li>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+      <li class="page-item">
+           <a class="page-link disabled"> ... </a>
+      </li>
+      <li class="page-item">
+           <a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+          </li>
+       {% endif %}
+   {% endif %}
+  </ul>
+
+
+{% endblock content %}

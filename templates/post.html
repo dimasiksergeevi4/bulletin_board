@@ -1,0 +1,51 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+Объявление
+{% endblock title %}
+
+{% block content %}
+    <h3>Сегодня: {% current_time '%d %b %Y' %} </h3>
+    <h2> Объявление {{ one_post.title|censor }} от : {{ one_post.date_of_creation|date:'d.m.Y' }} </h2>
+       <table>
+           <tr>
+               <td>Полный текст:</td>
+           </tr>
+
+           <tr>
+               <td>{{ one_post.category}}</td>
+               <td>{{ one_post.title}}</td>
+               <td>{{ one_post.content|safe }}</td>
+           </tr>
+
+       </table>
+
+        {% if comments %}
+    <div class="container">
+        <table class="table table-hover">
+         <thead>
+         <h3>Комментарии к объявлению</h3>
+            <tr>
+              <th scope="col">Автор</th>
+              <th scope="col">Создано</th>
+                <th scope="col">Текст</th>
+                <th scope="col">Согласован</th>
+            </tr>
+          </thead>
+           {% for one in comments %}
+            <tr class="light">
+                <td>{{ one.user }}</td>
+               <td>{{ one.date_of_creation }}</td>
+                <td>{{ one.text }}</td>
+                <td>{{ one.approved }}</td>
+                <br>
+           </tr>
+           {% endfor %}
+        </table>
+   {% else %}
+       <h2>Комментариев пока нет.</h2>
+   {% endif %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block content %}
+    <h2>Страница авторизованного пользователя
+        {{request.user.first_name}} {{request.user.last_name}}
+        ({{request.user.username}})
+    </h2>
+    <div> Здесь может содержаться персональная информация для каждого пользователя </div>
+
+    <button> <a href="/accounts/logout/">Выйти</a> </button>
+
+    <button> <a href="/user/edit/{{ request.user.id }}">Редактировать</a> </button>
+
+{% endblock %}

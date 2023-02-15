@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h2>Здравствуй, {{ user }}</h2>
+    <p>Новый комментарий на твое объявление от "{{ cur_user }}"!</p>
+    <p>Ссылка: <a href="{{ url }}"> {{ text|truncatechars:50 }}</a></p>
+</body>
+</html>
